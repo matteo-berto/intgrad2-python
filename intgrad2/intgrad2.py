@@ -10,7 +10,7 @@ def intgrad2(fx,fy,dx=1,dy=1,f11=0):
     Date: 28th August 2024
     https://github.com/matteo-berto/intgrad2-python
     
-    Python implementation of MATLAB function "intgrad2" by John D'Errico.
+    Python implementation of MATLAB "intgrad2" function by John D'Errico.
     
     John D'Errico (2024). Inverse (integrated) gradient
     (https://www.mathworks.com/matlabcentral/fileexchange/9734-inverse-integrated-gradient)
