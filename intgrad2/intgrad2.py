@@ -56,6 +56,30 @@ def intgrad2(fx,fy,dx=1,dy=1,f11=0):
              after integration. This is just the constant of integration.
 
              DEFAULT: f11 = 0
+        
+    arguments: (output)
+      fhat - (nx by ny) array containing the integrated gradient
+
+    Example usage 1: (Note x is uniform in spacing, y is not.)
+     xp = 0:.1:1;
+     yp = [0 .1 .2 .4 .8 1];
+     [x,y]=meshgrid(xp,yp);
+     f = exp(x+y) + sin((x-2*y)*3);
+     [fx,fy]=gradient(f,.1,yp);
+     fhat = intgrad2(fx,fy,.1,yp,1)
+
+    Example usage 2: Large grid, 101x101
+     xp = 0:.01:1;
+     yp = 0:.01:1;
+     [x,y]=meshgrid(xp,yp);
+     f = exp(x+y) + sin((x-2*y)*3);
+     [fx,fy]=gradient(f,.01);
+     fhat = intgrad2(fx,fy,.01,.01,1)
+     
+    Author; John D'Errico
+    Current release: 2
+    Date of release: 1/27/06
+    size 
     """
     if len(fx.shape)>2 or len(fy.shape)>2:
         raise Exception('fx and fy must be 2d arrays')
