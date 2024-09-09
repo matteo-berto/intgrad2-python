@@ -180,7 +180,7 @@ def intgrad2(fx,fy,dx=1,dy=1,f11=0):
     # Solve the final system of equations. They will be of
     # full rank, due to the explicit integration constant.
     # Just use sparse \
-    fhat_lstsq = np.linalg.lstsq(A[:,1:], rhs)
+    fhat_lstsq = np.linalg.lstsq(A[:,1:], rhs, rcond=None)
     fhat = np.insert(fhat_lstsq[0],0,[f11]).reshape((ny,nx), order='F')
 
     return fhat
