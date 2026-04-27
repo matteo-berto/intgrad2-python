@@ -1,13 +1,14 @@
 import numpy as np
 import numpy.matlib
 from scipy.sparse import csr_matrix
+from scipy.sparse.linalg import lsqr
 
 
 def intgrad2(fx,fy,dx=1,dy=1,f11=0):
     """
     Author: Matteo Berto
     Institution: University of Padua (Università degli Studi di Padova)
-    Date: 28th August 2024
+    Date: 27th April 2026
     https://github.com/matteo-berto/intgrad2-python
     
     Python implementation of MATLAB "intgrad2" function by John D'Errico.
@@ -197,14 +198,17 @@ def intgrad2(fx,fy,dx=1,dy=1,f11=0):
     Af_row = Af[:,[0, 1]].reshape((4*nx*ny,1), order='F').flatten()
     Af_col = Af[:,[2, 3]].reshape((4*nx*ny,1), order='F').flatten()
     Af_data = Af[:,[4, 5]].reshape((4*nx*ny,1), order='F').flatten()
-    A = csr_matrix((Af_data, (Af_row-1,Af_col-1)), shape=(2*nx*ny,nx*ny)).toarray()
+    A = csr_matrix((Af_data, (Af_row-1,Af_col-1)), shape=(2*nx*ny,nx*ny))
     # Finish up with f11, the constant of integration.
     # eliminate the first unknown, as f11 is given.
-    rhs = rhs - A[:,[0]]*f11
+    rhs = rhs.ravel() - A[:,0].toarray().ravel() * f11
     # Solve the final system of equations. They will be of
     # full rank, due to the explicit integration constant.
     # Just use sparse \
-    fhat_lstsq = np.linalg.lstsq(A[:,1:], rhs, rcond=None)
-    fhat = np.insert(fhat_lstsq[0],0,[f11]).reshape((ny,nx), order='F')
+    sol = lsqr(A[:,1:], rhs)[0]
+    fhat = np.empty(nx*ny, dtype=float)
+    fhat[0] = f11
+    fhat[1:] = sol
+    fhat = fhat.reshape((ny,nx), order='F')
 
     return fhat
